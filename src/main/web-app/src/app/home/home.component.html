@@ -1,0 +1,44 @@
+<p-messages></p-messages>
+<div class="p-grid">
+  <div class="p-col">
+    <p-card title="Select a file" styleClass="ui-card-shadow">
+      <p-fileUpload name="demo[]" customUpload="true" (uploadHandler)="actionUpload($event)" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        maxFileSize="10000000">
+      </p-fileUpload>
+    </p-card>
+  </div>
+</div>
+<div class="p-grid" *ngIf="showTable">
+  <div class="p-col">
+    <p-card styleClass="ui-card-shadow" title="Matching Results">
+      <p-table #dt [columns]="cols" [value]="matchingResults" [autoLayout]="true" [scrollable]="true" selectionMode="multiple"
+        [(selection)]="selectedResults" scrollHeight="55vh">
+        <ng-template pTemplate="caption">
+          <div class="ui-helper-clearfix">
+            <button type="button" pButton icon="pi pi-download" iconPos="left" label="Export" (click)="dt.exportCSV()"
+              style="float:right"></button>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+              {{col.header}}
+              <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order"
+                ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+          <tr>
+            <td *ngFor="let col of columns" [ngClass]="getRowStyling(rowData, col)">
+              {{rowData[col.field]}}
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+          Total Records: {{matchingResults?.length}}
+        </ng-template>
+      </p-table>
+    </p-card>
+  </div>
+</div>
